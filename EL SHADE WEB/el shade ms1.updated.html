@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Saimun Islam Nabil — Entrepreneur & Founder</title>
+<meta name="description" content="Personal site of Saimun Islam Nabil — entrepreneur, founder, and chief engineer." />
+
+<!-- ===================== FONTS ===================== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- ===================== TAILWIND (CDN) ===================== -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          void: '#0a0912',
+          voiddeep: '#050409',
+          panel: '#0f0e1a',
+          cyan: { DEFAULT: '#4dd8ff', dim: '#2a90ad' },
+          magenta: { DEFAULT: '#ff3d9a', dim: '#a1275f' },
+          amber: { DEFAULT: '#ffb454' },
+          paper: '#eef1f7',
+          muted: '#8b93a7',
+        },
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          mono: ['"IBM Plex Mono"', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+
+<!-- ===================== ICONS ===================== -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<!-- ===================== GSAP ===================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+  :root{
+    --cyan: #4dd8ff;
+    --magenta: #ff3d9a;
+    --amber: #ffb454;
+  }
+  html{ scroll-behavior:smooth; }
+  body{
+    background-color:#0a0912;
+    color:#eef1f7;
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+
+  ::selection{ background:var(--magenta); color:#0a0912; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar{ width:8px; }
+  ::-webkit-scrollbar-track{ background:#0a0912; }
+  ::-webkit-scrollbar-thumb{ background:#2a2438; border-radius:4px; }
+
+  /* visible focus for accessibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:3px;
+  }
+
+  /* ---------- background grid + noise ---------- */
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(77,216,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(77,216,255,0.05) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, black 40%, transparent 90%);
+  }
+
+  .noise{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:0.035; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- glow utilities ---------- */
+  .glow-cyan{ box-shadow: 0 0 24px -4px rgba(77,216,255,0.55); }
+  .glow-magenta{ box-shadow: 0 0 24px -4px rgba(255,61,154,0.55); }
+  .text-glow{ text-shadow: 0 0 18px rgba(77,216,255,0.55); }
+
+  /* ---------- orbs ---------- */
+  .orb{
+    position:absolute; border-radius:9999px; filter:blur(80px); opacity:0.35; pointer-events:none;
+  }
+
+  /* ---------- glass navbar ---------- */
+  .glass{
+    background:rgba(10,9,18,0.55);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+
+  /* ---------- hero corner-bracket frame ---------- */
+  .hud-frame{ position:relative; }
+  .hud-frame::before, .hud-frame::after,
+  .hud-frame .b1, .hud-frame .b2{
+    content:''; position:absolute; width:22px; height:22px; border:2px solid var(--cyan);
+  }
+  .hud-frame::before{ top:-10px; left:-10px; border-right:0; border-bottom:0; }
+  .hud-frame::after{ bottom:-10px; right:-10px; border-left:0; border-top:0; }
+  .hud-frame .b1{ top:-10px; right:-10px; border-left:0; border-bottom:0; }
+  .hud-frame .b2{ bottom:-10px; left:-10px; border-right:0; border-top:0; }
+
+  /* ---------- scanline on hero name ---------- */
+  .scan{ position:relative; display:inline-block; }
+  .scan::after{
+    content:''; position:absolute; left:0; right:0; height:2px; top:0;
+    background:linear-gradient(90deg, transparent, var(--cyan), transparent);
+    animation:scan-move 4s ease-in-out infinite;
+    opacity:0.8;
+  }
+  @keyframes scan-move{
+    0%,100%{ top:0; opacity:0; }
+    10%{ opacity:0.9; }
+    50%{ top:100%; opacity:0.9; }
+    60%{ opacity:0; }
+  }
+
+  /* ---------- typing cursor ---------- */
+  .cursor{ display:inline-block; width:3px; background:var(--cyan); margin-left:4px; animation:blink 1s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* ---------- version log line ---------- */
+  .log-line{
+    position:absolute; left:15px; top:0; bottom:0; width:2px;
+    background:linear-gradient(180deg, transparent, rgba(77,216,255,0.5), rgba(255,61,154,0.5), transparent);
+    transform-origin:top;
+  }
+  @media(min-width:768px){ .log-line{ left:50%; margin-left:-1px; } }
+
+  /* ---------- venture card tilt ---------- */
+  .tilt-card{ transform-style:preserve-3d; transition:transform 0.15s ease, box-shadow 0.3s ease; }
+  .tilt-card .sheen{
+    position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%), rgba(77,216,255,0.15), transparent 60%);
+    opacity:0; transition:opacity 0.3s ease;
+  }
+  .tilt-card:hover .sheen{ opacity:1; }
+
+  /* ---------- section reveal defaults (JS/GSAP will animate from these) ---------- */
+  .reveal{ opacity:0; transform:translateY(40px); }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .scan::after, .cursor{ animation:none !important; }
+    .reveal{ opacity:1 !important; transform:none !important; }
+  }
+
+  /* utility: gradient text */
+  .grad-text{
+    background:linear-gradient(90deg, var(--cyan), var(--magenta));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+</style>
+</head>
+
+<body class="font-body antialiased selection:bg-magenta">
+
+<div class="grid-bg"></div>
+<div class="noise"></div>
+
+<!-- ======================================================= -->
+<!-- NAVBAR                                                   -->
+<!-- ======================================================= -->
+<header id="navbar" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+  <nav class="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+    <a href="#home" class="font-mono text-sm text-cyan flex items-center gap-1">
+      <span class="text-muted">&gt;</span><span class="font-semibold">SIN</span><span class="cursor h-4 align-middle"></span>
+    </a>
+    <ul class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest text-muted">
+      <li><a href="#home" class="hover:text-cyan transition-colors">Home</a></li>
+      <li><a href="#journey" class="hover:text-cyan transition-colors">Journey</a></li>
+      <li><a href="#ventures" class="hover:text-cyan transition-colors">Ventures</a></li>
+      <li><a href="#connect" class="hover:text-cyan transition-colors">Connect</a></li>
+    </ul>
+    <a href="#connect" class="hidden md:inline-block font-mono text-xs uppercase tracking-widest border border-cyan/50 text-cyan px-4 py-2 rounded-full hover:bg-cyan hover:text-void transition-colors">
+      Say Hi
+    </a>
+    <!-- mobile toggle -->
+    <button id="menuBtn" class="md:hidden text-paper" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <i data-lucide="menu" class="w-6 h-6"></i>
+    </button>
+  </nav>
+  <!-- mobile menu -->
+  <div id="mobileMenu" class="md:hidden hidden glass px-6 py-4">
+    <ul class="flex flex-col gap-4 font-mono text-sm uppercase tracking-widest text-muted">
+      <li><a href="#home" class="mobile-link block hover:text-cyan">Home</a></li>
+      <li><a href="#journey" class="mobile-link block hover:text-cyan">Journey</a></li>
+      <li><a href="#ventures" class="mobile-link block hover:text-cyan">Ventures</a></li>
+      <li><a href="#connect" class="mobile-link block hover:text-cyan">Connect</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- ======================================================= -->
+<!-- HERO                                                     -->
+<!-- ======================================================= -->
+<section id="home" class="relative min-h-screen flex items-center px-6 pt-28 pb-16 overflow-hidden">
+  <div class="orb w-[420px] h-[420px] bg-cyan -top-20 -left-20"></div>
+  <div class="orb w-[420px] h-[420px] bg-magenta bottom-0 right-0"></div>
+
+  <div class="relative z-10 max-w-6xl mx-auto w-full grid md:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
+    <!-- text col -->
+    <div>
+      <p id="bootLine" class="font-mono text-xs md:text-sm text-cyan/80 mb-6 h-5"></p>
+
+      <h1 class="font-display font-semibold leading-[1.05] text-4xl sm:text-5xl lg:text-6xl">
+        <span class="reveal-hero block text-muted text-lg sm:text-xl font-body font-normal mb-3">Hey, I'm</span>
+        <span class="reveal-hero scan block">Saimun Islam Nabil</span>
+      </h1>
+
+      <div class="reveal-hero mt-5 font-mono text-lg sm:text-xl text-paper/90 h-8">
+        <span class="text-muted">$</span> <span id="typedRole" class="grad-text font-medium"></span><span class="cursor h-5"></span>
+      </div>
+
+      <p class="reveal-hero mt-6 max-w-lg text-muted leading-relaxed">
+        I am a visionary entrepreneur and builder focused on elevating human life. Currently establishing elite, organic ways to fulfill basic human needs through high-end tech, artificial intelligence, and premium initiatives.
+      </p>
+
+      <div class="reveal-hero mt-8 flex flex-wrap gap-4">
+        <a href="#ventures" class="glow-cyan px-6 py-3 rounded-full bg-cyan text-void font-mono text-sm font-semibold uppercase tracking-wide hover:brightness-110 transition">
+          View Ventures
+        </a>
+        <a href="#connect" class="px-6 py-3 rounded-full border border-paper/20 font-mono text-sm uppercase tracking-wide hover:border-magenta hover:text-magenta transition">
+          Get in touch
+        </a>
+      </div>
+    </div>
+
+    <!-- image col -->
+    <div class="reveal-hero justify-self-center">
+      <div class="w-56 h-56 sm:w-72 sm:h-72">
+        
+        <div class="w-full h-full rounded-2xl overflow-hidden bg-panel border border-white/10 glow-cyan">
+          <!-- Replace src with your own photo -->
+          <img src="images/profile.01.jpg.jpeg"
+               alt="Portrait of Saimun Islam Nabil"
+               class="w-full h-full object-cover" />
+        </div>
+        <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-void border border-cyan/40 rounded-full px-4 py-1 font-mono text-[10px] uppercase tracking-widest text-cyan whitespace-nowrap">
+          Status: Scaling Ecosystems
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="#journey" aria-label="Scroll to journey section" class="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted animate-bounce">
+    <i data-lucide="chevron-down" class="w-6 h-6"></i>
+  </a>
+</section>
+
+<!-- ======================================================= -->
+<!-- JOURNEY / VERSION LOG TIMELINE                           -->
+<!-- ======================================================= -->
+<section id="journey" class="relative py-28 px-6">
+  <div class="max-w-5xl mx-auto">
+    <p class="reveal font-mono text-cyan text-xs uppercase tracking-[0.3em] mb-3 text-center">Change log</p>
+    <h2 class="reveal font-display text-3xl sm:text-4xl font-semibold text-center mb-20">The Build, Version by Version</h2>
+
+    <div class="relative">
+      <div class="log-line"></div>
+
+      <!-- v1.0 -->
+      <div class="reveal relative md:grid md:grid-cols-2 md:gap-10 mb-16 pl-10 md:pl-0">
+        <div class="md:text-right md:pr-10">
+          <span class="inline-block font-mono text-xs text-amber border border-amber/40 rounded-full px-3 py-1 mb-3">v1.0 — Origin (2022)</span>
+          <h3 class="font-display text-xl font-semibold mb-2">The Launch of SAISAN</h3>
+          <p class="text-muted leading-relaxed">Initiated my journey into high-level business structures by founding the SAISAN Corporation, laying the multi-industry foundation for future enterprise ecosystems.</p>
+        </div>
+        <div class="absolute left-0 md:left-1/2 top-1 -translate-x-1/2 w-4 h-4 rounded-full bg-amber glow-cyan"></div>
+        <div class="hidden md:block"></div>
+      </div>
+
+      <!-- v2.0 -->
+      <div class="reveal relative md:grid md:grid-cols-2 md:gap-10 mb-16 pl-10 md:pl-0">
+        <div class="hidden md:block"></div>
+        <div class="md:pl-10">
+          <span class="inline-block font-mono text-xs text-cyan border border-cyan/40 rounded-full px-3 py-1 mb-3">v2.0 — Scaling (2025)</span>
+          <h3 class="font-display text-xl font-semibold mb-2">Tech Leadership &amp; EUSIN Evolution</h3>
+          <p class="text-muted leading-relaxed">Stepped in as the Founder and CEO of EUSIN clothing brand starting May 19, 2025. Concurrently scaling RexiCore AI as its Founder and Chief Engineer, leading development of core advanced technical layers.</p>
+        </div>
+        <div class="absolute left-0 md:left-1/2 top-1 -translate-x-1/2 w-4 h-4 rounded-full bg-cyan glow-cyan"></div>
+      </div>
+
+      <!-- vNext -->
+      <div class="reveal relative md:grid md:grid-cols-2 md:gap-10 pl-10 md:pl-0">
+        <div class="md:text-right md:pr-10">
+          <span class="inline-block font-mono text-xs text-magenta border border-magenta/40 rounded-full px-3 py-1 mb-3">vNext — Future Vision</span>
+          <h3 class="font-display text-xl font-semibold mb-2">Global Impact &amp; Organic Systems</h3>
+          <p class="text-muted leading-relaxed">Fulfilling basic human needs organically and elegantly. Mega plans involve creating premium healthy food startups, scaling AI agents, and deploying AGI ethically to work for the betterment of all humanity while proudly representing Bangladesh globally.</p>
+        </div>
+        <div class="absolute left-0 md:left-1/2 top-1 -translate-x-1/2 w-4 h-4 rounded-full bg-magenta glow-magenta"></div>
+        <div class="hidden md:block"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- VENTURES                                                 -->
+<!-- ======================================================= -->
+<section id="ventures" class="relative py-28 px-6">
+  <div class="max-w-6xl mx-auto">
+    <p class="reveal font-mono text-magenta text-xs uppercase tracking-[0.3em] mb-3 text-center">Running processes</p>
+    <h2 class="reveal font-display text-3xl sm:text-4xl font-semibold text-center mb-16">Ventures &amp; Businesses</h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- Card 1 -->
+      <article class="tilt-card reveal relative rounded-2xl bg-panel border border-white/10 overflow-hidden">
+        <div class="sheen"></div>
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10 font-mono text-xs text-muted">
+          <span class="w-2.5 h-2.5 rounded-full bg-magenta/70"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-amber/70"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan/70"></span>
+          <span class="ml-2">~/ventures/rexicore-ai</span>
+        </div>
+        <div class="p-6">
+          <div class="w-11 h-11 rounded-xl bg-cyan/10 flex items-center justify-center mb-4">
+            <i data-lucide="cpu" class="w-5 h-5 text-cyan"></i>
+          </div>
+          <h3 class="font-display text-lg font-semibold mb-2">RexiCore AI</h3>
+          <p class="text-muted text-sm leading-relaxed mb-4">An artificial intelligence and deep tech corporation. Engineering state-of-the-art software systems, intelligent autonomous structures, and revolutionary software paradigms.</p>
+          <span class="font-mono text-xs text-cyan uppercase tracking-widest">Founder &amp; Chief Engineer</span>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="tilt-card reveal relative rounded-2xl bg-panel border border-white/10 overflow-hidden">
+        <div class="sheen"></div>
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10 font-mono text-xs text-muted">
+          <span class="w-2.5 h-2.5 rounded-full bg-magenta/70"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-amber/70"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan/70"></span>
+          <span class="ml-2">~/ventures/eusin</span>
+        </div>
+        <div class="p-6">
+          <div class="w-11 h-11 rounded-xl bg-magenta/10 flex items-center justify-center mb-4">
+            <i data-lucide="shirt" class="w-5 h-5 text-magenta"></i>
+          </div>
+          <h3 class="font-display text-lg font-semibold mb-2">EUSIN</h3>
+          <p class="text-muted text-sm leading-relaxed mb-4">A high-end premier clothing brand focused on delivering exceptional fabric quality, elite designs, and modern aesthetic choices globally.</p>
+          <span class="font-mono text-xs text-magenta uppercase tracking-widest">Founder &amp; CEO · May 19, 2025</span>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="tilt-card reveal relative rounded-2xl bg-panel border border-white/10 overflow-hidden">
+        <div class="sheen"></div>
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-white/10 font-mono text-xs text-muted">
+          <span class="w-2.5 h-2.5 rounded-full bg-magenta/70"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-amber/70"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan/70"></span>
+          <span class="ml-2">~/ventures/saisan</span>
+        </div>
+        <div class="p-6">
+          <div class="w-11 h-11 rounded-xl bg-amber/10 flex items-center justify-center mb-4">
+            <i data-lucide="building" class="w-5 h-5 text-amber"></i>
+          </div>
+          <h3 class="font-display text-lg font-semibold mb-2">SAISAN</h3>
+          <p class="text-muted text-sm leading-relaxed mb-4">An expansive corporation housing complex frameworks. Serves as the overarching umbrella driving multi-industry scalable developments.</p>
+          <span class="font-mono text-xs text-amber uppercase tracking-widest">Founder · Est. 2022</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- CONNECT                                                  -->
+<!-- ======================================================= -->
+<section id="connect" class="relative py-28 px-6">
+  <div class="orb w-[380px] h-[380px] bg-cyan/70 -bottom-10 -right-10"></div>
+
+  <div class="relative z-10 max-w-4xl mx-auto text-center">
+    <p class="reveal font-mono text-cyan text-xs uppercase tracking-[0.3em] mb-3">Open connection</p>
+    <h2 class="reveal font-display text-3xl sm:text-4xl font-semibold mb-4">Let's build something</h2>
+    <p class="reveal text-muted max-w-lg mx-auto mb-10">
+      Have a project, a partnership, or want to discuss massive ecosystem building? Reach out directly.
+    </p>
+
+    <!-- socials -->
+    <div class="reveal flex justify-center flex-wrap gap-4 mb-14">
+      <a href="https://x.com/why_not_nabil" target="_blank" rel="noopener noreferrer"
+         class="w-12 h-12 rounded-full border border-white/10 bg-panel flex items-center justify-center hover:border-white hover:text-white hover:-translate-y-1 transition-all" aria-label="X (Twitter)">
+        <i data-lucide="twitter" class="w-5 h-5"></i>
+      </a>
+      <a href="https://instagram.com/why_not_nabil" target="_blank" rel="noopener noreferrer"
+         class="w-12 h-12 rounded-full border border-white/10 bg-panel flex items-center justify-center hover:border-[#E1306C] hover:text-[#E1306C] hover:-translate-y-1 transition-all" aria-label="Instagram">
+        <i data-lucide="instagram" class="w-5 h-5"></i>
+      </a>
+      <a href="mailto:whynotnabilofficial@gmail.com"
+         class="w-12 h-12 rounded-full border border-white/10 bg-panel flex items-center justify-center hover:border-amber hover:text-amber hover:-translate-y-1 transition-all" aria-label="Email">
+        <i data-lucide="mail" class="w-5 h-5"></i>
+      </a>
+    </div>
+
+    <!-- contact form -->
+    <form id="contactForm" class="reveal grid gap-4 text-left bg-panel border border-white/10 rounded-2xl p-6 sm:p-8">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label for="name" class="block font-mono text-xs uppercase tracking-widest text-muted mb-2">Name</label>
+          <input id="name" name="name" type="text" required
+                 class="w-full bg-void border border-white/10 rounded-lg px-4 py-3 text-sm focus:border-cyan outline-none transition-colors" placeholder="Ada Lovelace" />
+        </div>
+        <div>
+          <label for="email" class="block font-mono text-xs uppercase tracking-widest text-muted mb-2">Email</label>
+          <input id="email" name="email" type="email" required
+                 class="w-full bg-void border border-white/10 rounded-lg px-4 py-3 text-sm focus:border-cyan outline-none transition-colors" placeholder="ada@example.com" />
+        </div>
+      </div>
+      <div>
+        <label for="message" class="block font-mono text-xs uppercase tracking-widest text-muted mb-2">Message</label>
+        <textarea id="message" name="message" rows="4" required
+                  class="w-full bg-void border border-white/10 rounded-lg px-4 py-3 text-sm focus:border-cyan outline-none transition-colors resize-none" placeholder="Tell me about your project..."></textarea>
+      </div>
+      <button type="submit"
+              class="glow-cyan justify-self-start px-8 py-3 rounded-full bg-cyan text-void font-mono text-sm font-semibold uppercase tracking-wide hover:brightness-110 transition">
+        Send message
+      </button>
+      <p id="formNote" class="font-mono text-xs text-muted hidden">Opening your email client…</p>
+    </form>
+  </div>
+</section>
+
+<!-- ======================================================= -->
+<!-- FOOTER                                                   -->
+<!-- ======================================================= -->
+<footer class="relative border-t border-white/10 py-8 px-6 text-center">
+  <p class="font-mono text-xs text-muted">© <span id="year"></span> Saimun Islam Nabil. Built line by line.</p>
+</footer>
+
+<!-- ======================================================= -->
+<!-- SCRIPT                                                   -->
+<!-- ======================================================= -->
+<script>
+  lucide.createIcons();
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ---------------- mobile menu ---------------- */
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    const isOpen = !mobileMenu.classList.contains('hidden');
+    mobileMenu.classList.toggle('hidden');
+    menuBtn.setAttribute('aria-expanded', String(!isOpen));
+  });
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+  });
+
+  /* ---------------- navbar glass on scroll ---------------- */
+  const navbar = document.getElementById('navbar');
+  const setNavState = () => {
+    if (window.scrollY > 30) navbar.classList.add('glass');
+    else navbar.classList.remove('glass');
+  };
+  setNavState();
+  window.addEventListener('scroll', setNavState, { passive: true });
+
+  /* ---------------- boot line + role typing effect ---------------- */
+  const bootTarget = document.getElementById('bootLine');
+  const bootText = '';
+  const roleTarget = document.getElementById('typedRole');
+  const roles = ['Entrepreneur', 'Founder EUSIN', 'Chief Engineer RexiCore AI', 'SAISAN'];
+
+  function typeOnce(el, text, speed, done) {
+    let i = 0;
+    (function tick() {
+      el.textContent = text.slice(0, i);
+      i++;
+      if (i <= text.length) setTimeout(tick, speed);
+      else if (done) done();
+    })();
+  }
+
+  function cycleRoles(index = 0) {
+    const word = roles[index % roles.length];
+    let i = 0;
+    const typing = setInterval(() => {
+      roleTarget.textContent = word.slice(0, i);
+      i++;
+      if (i > word.length) {
+        clearInterval(typing);
+        setTimeout(() => eraseRole(index), 1400);
+      }
+    }, 70);
+  }
+
+  function eraseRole(index) {
+    const word = roles[index % roles.length];
+    let i = word.length;
+    const erasing = setInterval(() => {
+      roleTarget.textContent = word.slice(0, i);
+      i--;
+      if (i < 0) {
+        clearInterval(erasing);
+        cycleRoles(index + 1);
+      }
+    }, 40);
+  }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion) {
+    bootTarget.textContent = bootText;
+    roleTarget.textContent = roles[0];
+  } else {
+    typeOnce(bootTarget, bootText, 25, () => cycleRoles(0));
+  }
+
+  /* ---------------- scroll reveal animations (GSAP) ---------------- */
+  gsap.registerPlugin(ScrollTrigger);
+
+  if (!reduceMotion) {
+    gsap.utils.toArray('.reveal-hero').forEach((el, i) => {
+      gsap.to(el, {
+        opacity: 1, y: 0, duration: 0.8, delay: 0.15 * i, ease: 'power3.out',
+      });
+      gsap.set(el, { opacity: 0, y: 30 });
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.8, delay: 0.2 + 0.15 * i, ease: 'power3.out' });
+    });
+
+    gsap.utils.toArray('.reveal').forEach((el) => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 85%' }
+        }
+      );
+    });
+
+    gsap.fromTo('.log-line', { scaleY: 0 }, {
+      scaleY: 1, duration: 1.2, ease: 'power2.out',
+      scrollTrigger: { trigger: '#journey', start: 'top 70%' }
+    });
+  } else {
+    document.querySelectorAll('.reveal, .reveal-hero').forEach(el => {
+      el.style.opacity = 1; el.style.transform = 'none';
+    });
+  }
+
+  /* ---------------- 3D tilt on venture cards ---------------- */
+  if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        const rx = ((y / r.height) - 0.5) * -10;
+        const ry = ((x / r.width) - 0.5) * 10;
+        card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+        card.style.setProperty('--mx', `${x}px`);
+        card.style.setProperty('--my', `${y}px`);
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(700px) rotateX(0) rotateY(0) translateY(0)';
+      });
+    });
+  }
+
+  /* ---------------- contact form -> mailto ---------------- */
+  const form = document.getElementById('contactForm');
+  const formNote = document.getElementById('formNote');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
+    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
+    window.location.href = `mailto:whynotnabilofficial@gmail.com?subject=${subject}&body=${body}`;
+
+    formNote.classList.remove('hidden');
+    setTimeout(() => formNote.classList.add('hidden'), 4000);
+  });
+</script>
+
+</body>
+</html>
